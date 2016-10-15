@@ -11,7 +11,7 @@
             file="profitlossq.report_profitlossq"
         />
 
-        <record id="paperformat_posreceipt" model="report.paperformat">
+        <record id="paperformat_profit_loss" model="report.paperformat">
             <field name="name">European A4 low margin</field>
             <field name="default" eval="True"/>
             <field name="format">A4</field>
@@ -28,7 +28,7 @@
         </record>
 
         <record id="action_report_profit_loss_qweb" model="ir.actions.report.xml">
-            <field name="paperformat_id" ref="paperformat_posreceipt"/>
+            <field name="paperformat_id" ref="paperformat_profit_loss"/>
         </record>
 
     </data>

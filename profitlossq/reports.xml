@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <report 
+            id="action_report_profit_loss_qweb"
+            model="profitlossq.report"
+            string="Profit Loss QWeb"
+            report_type="qweb-pdf"
+            name="profitlossq.report_profitlossq"
+            file="profitlossq.report_profitlossq"
+        />
+
+    </data>
+</openerp>

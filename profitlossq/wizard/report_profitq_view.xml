@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+    <data>
+
+        <record id="report_profitlossq_view" model="ir.ui.view">
+          <field name="name">Profit Loss QWeb</field>
+          <field name="model">profitlossq.report</field>
+          <field name="inherit_id" ref="account.account_common_report_view" />
+          <field name="arch" type="xml">
+            <data>
+            <xpath expr="//notebook/page[@string='Journals']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='target_move']" position="after">
+                <field name="display_account"/>
+                <newline/>
+            </xpath>
+            </data>
+          </field>
+        </record>
+
+        <record id="action_profitlossq_menu" model="ir.actions.act_window">
+            <field name="name">Profit Loss QWeb</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">profitlossq.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="report_profitlossq_view"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem
+                icon="STOCK_PRINT"
+                name="Profit Loss QWeb"
+                parent="account.final_accounting_reports"
+                action="action_profitlossq_menu"
+                id="menu_general_profit_loss_qweb_report"
+               />
+
+        <!--<record model="ir.values" id="action_account_balance_report_values2">-->
+            <!--<field name="model_id" ref="profitlossq" />-->
+            <!--<field name="name">Profit Loss QWeb</field>-->
+            <!--<field name="key2">client_print_multi</field>-->
+            <!--<field name="value" eval="'ir.actions.act_window,' +str(ref('action_account_balance_menu'))" />-->
+            <!--<field name="key">action</field>-->
+            <!--<field name="model">profitlossq</field>-->
+        <!--</record>-->
+
+    </data>
+</openerp>

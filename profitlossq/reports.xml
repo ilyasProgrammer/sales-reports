@@ -11,5 +11,25 @@
             file="profitlossq.report_profitlossq"
         />
 
+        <record id="paperformat_posreceipt" model="report.paperformat">
+            <field name="name">European A4 low margin</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Landscape</field>
+            <field name="margin_top">10</field>
+            <field name="margin_bottom">10</field>
+            <field name="margin_left">10</field>
+            <field name="margin_right">10</field>
+            <field name="header_line" eval="True"/>
+            <field name="header_spacing">20</field>
+            <field name="dpi">80</field>
+        </record>
+
+        <record id="action_report_profit_loss_qweb" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="paperformat_posreceipt"/>
+        </record>
+
     </data>
 </openerp>

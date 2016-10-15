@@ -41,6 +41,7 @@ class profitlossq(report_sxw.rml_parse, common_report_header):
         if (data['model'] == 'ir.ui.menu'):
             new_ids = 'chart_account_id' in data['form'] and [data['form']['chart_account_id']] or []
             objects = self.pool.get('account.account').browse(self.cr, self.uid, new_ids)
+            data['form']['landscape'] = True
         return super(profitlossq, self).set_context(objects, data, new_ids, report_type=report_type)
 
     def lines(self, form, ids=None, done=None):
@@ -202,6 +203,10 @@ class profitlossq(report_sxw.rml_parse, common_report_header):
             lines.append(vals)
 
         return lines
+
+    def _print_report(self, cr, uid, ids, data, context=None):
+        context['landscape'] = True
+        return self.pool['report'].get_action(cr, uid, [], 'profitlossq.report_profitlossq', data=data, context=context)
 
 
 class report_trialbalance(osv.AbstractModel):

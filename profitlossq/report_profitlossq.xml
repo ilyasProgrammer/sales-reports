@@ -64,6 +64,7 @@
                             <th class="text-right">Oct</th>
                             <th class="text-right">Nov</th>
                             <th class="text-right">Dec</th>
+                            <th class="text-right">Total</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -88,6 +89,7 @@
                                     <td class="text-right"><span t-att-style="style" t-esc="a.get(10)"/></td>
                                     <td class="text-right"><span t-att-style="style" t-esc="a.get(11)"/></td>
                                     <td class="text-right"><span t-att-style="style" t-esc="a.get(12)"/></td>
+                                    <td class="text-right"><span t-att-style="style" t-esc="a.get('total')"/></td>
                                 </t>
                             </tr>
                         </tbody>

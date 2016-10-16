@@ -20,7 +20,6 @@ class profitlossq(report_sxw.rml_parse, common_report_header):
         self.result_acc = []
         self.localcontext.update({
             'time': time,
-            'lines': self.lines,
             'sum_debit': self._sum_debit,
             'sum_credit': self._sum_credit,
             'get_fiscalyear':self._get_fiscalyear,
@@ -44,69 +43,6 @@ class profitlossq(report_sxw.rml_parse, common_report_header):
             data['form']['landscape'] = True
         return super(profitlossq, self).set_context(objects, data, new_ids, report_type=report_type)
 
-    def lines(self, form, ids=None, done=None):
-        def _process_child(accounts, disp_acc, parent):
-                account_rec = [acct for acct in accounts if acct['id']==parent][0]
-                currency_obj = self.pool.get('res.currency')
-                acc_id = self.pool.get('account.account').browse(self.cr, self.uid, account_rec['id'])
-                currency = acc_id.currency_id and acc_id.currency_id or acc_id.company_id.currency_id
-                res = {
-                    'id': account_rec['id'],
-                    'type': account_rec['type'],
-                    'code': account_rec['code'],
-                    'name': account_rec['name'],
-                    'level': account_rec['level'],
-                    'debit': account_rec['debit'],
-                    'credit': account_rec['credit'],
-                    'balance': account_rec['balance'],
-                    'parent_id': account_rec['parent_id'],
-                    'bal_type': '',
-                }
-                self.sum_debit += account_rec['debit']
-                self.sum_credit += account_rec['credit']
-                if disp_acc == 'movement':
-                    if not currency_obj.is_zero(self.cr, self.uid, currency, res['credit']) or not currency_obj.is_zero(self.cr, self.uid, currency, res['debit']) or not currency_obj.is_zero(self.cr, self.uid, currency, res['balance']):
-                        self.result_acc.append(res)
-                elif disp_acc == 'not_zero':
-                    if not currency_obj.is_zero(self.cr, self.uid, currency, res['balance']):
-                        self.result_acc.append(res)
-                else:
-                    self.result_acc.append(res)
-                if account_rec['child_id']:
-                    for child in account_rec['child_id']:
-                        _process_child(accounts,disp_acc,child)
-
-        obj_account = self.pool.get('account.account')
-        if not ids:
-            ids = self.ids
-        if not ids:
-            return []
-        if not done:
-            done={}
-
-        ctx = self.context.copy()
-
-        ctx['fiscalyear'] = form['fiscalyear_id']
-        if form['filter'] == 'filter_period':
-            ctx['period_from'] = form['period_from']
-            ctx['period_to'] = form['period_to']
-        elif form['filter'] == 'filter_date':
-            ctx['date_from'] = form['date_from']
-            ctx['date_to'] = form['date_to']
-        ctx['state'] = form['target_move']
-        parents = ids
-        child_ids = obj_account._get_children_and_consol(self.cr, self.uid, ids, ctx)
-        if child_ids:
-            ids = child_ids
-        accounts = obj_account.read(self.cr, self.uid, ids, ['type','code','name','debit','credit','balance','parent_id','level','child_id'], ctx)
-
-        for parent in parents:
-                if parent in done:
-                    continue
-                done[parent] = 1
-                _process_child(accounts,form['display_account'],parent)
-        return self.result_acc
-
     def get_lines(self, data):
         lines = []
         exp_ids = self.pool.get('account.account').search(self.cr, self.uid, [('user_type','=','Expense')])
@@ -125,10 +61,13 @@ class profitlossq(report_sxw.rml_parse, common_report_header):
                         """, (tuple(inc_ids), year))
 
         inc_total = self.cr.dictfetchall()
+        total_sum = 0
         vals = {}
         for r in inc_total:
             vals[r['month']] = math.fabs(r['debit'] - r['credit'])
+            total_sum += vals[r['month']]
         vals['account'] = 'Income'
+        vals['total'] = total_sum
         vals['level'] = 1
         lines.append(vals)
         self.cr.execute("""
@@ -153,9 +92,12 @@ class profitlossq(report_sxw.rml_parse, common_report_header):
                             """, (name['account'], year))
             inc = self.cr.dictfetchall()
             vals = {}
+            total_sum = 0
             for x in inc:
                 vals[x['month']] = math.fabs(x['debit'] - x['credit'])
+                total_sum += vals[x['month']]
             vals['account'] = name['account']
+            vals['total'] = total_sum
             vals['level'] = 4
             lines.append(vals)
 
@@ -169,9 +111,12 @@ class profitlossq(report_sxw.rml_parse, common_report_header):
                         """, (tuple(exp_ids), year))
         exp_total = self.cr.dictfetchall()
         vals = {}
+        total_sum = 0
         for r in exp_total:
             vals[r['month']] = math.fabs(r['debit'] - r['credit'])
+            total_sum += vals[r['month']]
         vals['account'] = 'Expense'
+        vals['total'] = total_sum
         vals['level'] = 1
         lines.append(vals)
         self.cr.execute("""
@@ -196,17 +141,16 @@ class profitlossq(report_sxw.rml_parse, common_report_header):
                             """, (name['account'], year))
             inc = self.cr.dictfetchall()
             vals = {}
+            total_sum = 0
             for x in inc:
                 vals[x['month']] = math.fabs(x['debit'] - x['credit'])
+                total_sum += vals[x['month']]
             vals['account'] = name['account']
+            vals['total'] = total_sum
             vals['level'] = 4
             lines.append(vals)
 
         return lines
-
-    def _print_report(self, cr, uid, ids, data, context=None):
-        context['landscape'] = True
-        return self.pool['report'].get_action(cr, uid, [], 'profitlossq.report_profitlossq', data=data, context=context)
 
 
 class report_trialbalance(osv.AbstractModel):
@@ -214,4 +158,3 @@ class report_trialbalance(osv.AbstractModel):
     _inherit = 'report.abstract_report'
     _template = 'profitlossq.report_profitlossq'
     _wrapped_report_class = profitlossq
-

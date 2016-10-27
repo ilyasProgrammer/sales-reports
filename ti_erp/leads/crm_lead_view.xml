@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+<!-- Inherited CRM Lead Form View -->
+        <record id='crm_lead_inherit' model='ir.ui.view'>
+            <field name="name">CRM - Leads Form</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_form_view_leads"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook/page[@string='Internal Notes']" position="inside">
+                      <group>
+	                      <field name="lead_source"/>
+	                      <field name="website"/>
+	                      <field name="annual_revenue"/>
+	                      <field name="BM_sector"/>
+	                      <field name="subscribe_news"/>
+                      </group>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

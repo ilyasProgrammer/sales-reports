@@ -1,0 +1,48 @@
+# Take res.partner data (IE_Live) and merge it with data from res.partner (ti2) for all the res.partner where company is 1 (Not ID=3). 
+	Use email address or company name as the common identifier but keep the internal ID from IE_Live database as you will need it in step 4.
+# Take Leads from crm.lead data from (ti2) with their comments & all the data. Map the status to the equivalent status in the new database in 	opportunities database (leads don't exist in new database)
+# Map phone calls to correct res.partners
+# Take Opportunities (crm.lead again) from ti2 and put them in new database.
+# Take products.products and put them in the new database
+# Take account.invoice and put them in new database with all the relationships with products and partners. This should bring in all the credit notes.
+
+1. Export partners form IE.
+2. Load partners to 10
+.
+3. Export partners from ti2.
+4. Load partners to 10 using custom  script and binding to existing records using name and emails.
+
+5. Export leads form ti2.
+6. Load leads to 10.
+
+7. Export phone calls from ti2.
+8. Load phone calls to 10. 
+
+9. Export opportunities form ti2.
+10. Load opportunities to 10.
+
+11. Export products form ti2.
+12. Load products to 10.
+
+13. Export invoice form IE.
+14. Load products to 10.
+
+calendar events ???
+attachments ???
+update all sequences !!
+always check skipped columns especially user partner must be valid
+
+pg_dump -t rp iii | psql o10
+#create 2 companies
+pg_dump -t rp2 ti2 | psql o10
+pg_dump -t ma ti2 | psql o10  need to update columns !
+#better create manuallly #pg_dump -t ru iii | psql o10 
+pg_dump -t mm ti2 | psql o10
+pg_dump -t rpt ti2 | psql o10
+pg_dump -t cl ti2 | psql o10
+#mail folowers
+pg_dump -t mf ti2 | psql o10
+pg_dump -t mms ti2 | psql o10
+pg_dump -t mfmmsr ti2 | psql o10
+#phone calls
+pg_dump -t cp ti2 | psql o10

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+<!-- Inherited Partner form view -->
+        <record id='res_partner_inherit' model='ir.ui.view'>
+            <field name="name">partner view</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@string='Internal Notes']" position="inside">
+                      <group>
+	                      <field name="salutation"/>
+	                      <field name="lead_source"/>
+	                      <field name="home_phone"/>
+	                      <field name="other_phone"/>
+	                      <field name="do_not_call"/>
+	                      <field name="birthday"/>
+	                      <field name="industry"/>
+	                      <field name="type"/>
+                      </group>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

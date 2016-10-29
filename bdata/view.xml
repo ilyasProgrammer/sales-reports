@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <menuitem name="Business Data" id="main_menu_business"/>
+        <menuitem name="Business Data" parent="main_menu_business" id="menu_business" sequence="1"/>
+        <menuitem name="Business Data" parent="menu_business" id="menu_business_items" sequence="1"/>
+
+        <record id='menu_business_act' model='ir.actions.act_window'>
+            <field name="name">All Business Data</field>
+            <field name="res_model">data.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id='menu_business_tree' model='ir.ui.view'>
+            <field name="name">menu.business.tree</field>
+            <field name="model">data.order</field>
+            <field name="arch" type="xml">
+                <tree string="Business Data">
+                    <field name="business_name"/>
+                    <field name="telephone"/>
+                    <field name="address"/>
+                    <field name="state"/>
+                    <field name="post_code"/>
+                    <field name="manta_url"/>
+                    <field name="source_url"/>
+                    <field name="comment"/>
+                </tree>
+            </field>
+        </record>
+
+        <menuitem action='menu_business_act' parent="menu_business" id="menu_business_act_menu" sequence="1"/>
+
+    </data>
+</openerp>

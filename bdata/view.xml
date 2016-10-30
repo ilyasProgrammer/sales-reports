@@ -18,6 +18,7 @@
             <field name="arch" type="xml">
                 <tree string="Business Data">
                     <field name="business_name"/>
+                    <field name="catagery"/>
                     <field name="telephone"/>
                     <field name="address"/>
                     <field name="state"/>

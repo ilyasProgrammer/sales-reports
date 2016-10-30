@@ -15,3 +15,4 @@ class BusinessData(models.Model):
     manta_url = fields.Char()
     source_url = fields.Char()
     comment = fields.Char()
+    catagery = fields.Char()
